@@ -11,12 +11,21 @@ import io.strimzi.api.kafka.model.KafkaResources;
 import io.strimzi.systemtest.AbstractST;
 import io.strimzi.systemtest.Constants;
 import io.strimzi.systemtest.kafkaclients.internalClients.InternalKafkaClient;
+import io.strimzi.systemtest.monitoring.MonitoringClient;
+import io.strimzi.systemtest.resources.ResourceManager;
 import io.strimzi.systemtest.resources.crd.KafkaBridgeResource;
+import io.strimzi.systemtest.resources.crd.KafkaClientsResource;
+import io.strimzi.systemtest.resources.crd.KafkaConnectResource;
 import io.strimzi.systemtest.resources.crd.KafkaMirrorMaker2Resource;
+import io.strimzi.systemtest.resources.crd.KafkaResource;
+import io.strimzi.systemtest.resources.crd.KafkaTopicResource;
 import io.strimzi.systemtest.resources.crd.KafkaUserResource;
+import io.strimzi.systemtest.utils.FileUtils;
 import io.strimzi.systemtest.utils.kafkaUtils.KafkaUserUtils;
 import io.strimzi.systemtest.utils.kubeUtils.controllers.DeploymentUtils;
 import io.strimzi.systemtest.utils.specific.CruiseControlUtils;
+import io.strimzi.systemtest.utils.kubeUtils.objects.PodUtils;
+import io.strimzi.systemtest.utils.kubeUtils.objects.SecretUtils;
 import io.strimzi.systemtest.utils.specific.MetricsUtils;
 import io.strimzi.test.TestUtils;
 import io.strimzi.test.executor.Exec;
@@ -25,11 +34,6 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import io.strimzi.systemtest.resources.ResourceManager;
-import io.strimzi.systemtest.resources.crd.KafkaClientsResource;
-import io.strimzi.systemtest.resources.crd.KafkaConnectResource;
-import io.strimzi.systemtest.resources.crd.KafkaResource;
-import io.strimzi.systemtest.resources.crd.KafkaTopicResource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,6 +63,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Tag(REGRESSION)
 @Tag(ACCEPTANCE)
@@ -67,11 +72,14 @@ public class MetricsST extends AbstractST {
 
     private static final Logger LOGGER = LogManager.getLogger(MetricsST.class);
 
+    private static final String PROMETHEUS_POD = "prometheus-prometheus-0";
+    private static final String ALERTMANAGER_POD = "alertmanager-alertmanager-0";
     public static final String NAMESPACE = "metrics-cluster-test";
     public static final String SECOND_CLUSTER = "second-kafka-cluster";
     public static final String MIRROR_MAKER_CLUSTER = "mm2-cluster";
     private static final String BRIDGE_CLUSTER = "my-bridge";
     private final Object lock = new Object();
+    private MonitoringClient monitoringClient;
     private HashMap<String, String> kafkaMetricsData;
     private HashMap<String, String> zookeeperMetricsData;
     private HashMap<String, String> kafkaConnectMetricsData;
@@ -82,13 +90,11 @@ public class MetricsST extends AbstractST {
     private HashMap<String, String> userOperatorMetricsData;
     private HashMap<String, String> topicOperatorMetricsData;
 
-    private String bridgeTopic = "bridge-topic";
+    private final String bridgeTopic = "bridge-topic";
 
     @Test
     void testKafkaBrokersCount() {
-        Pattern brokerOnlineCount = Pattern.compile("kafka_server_replicamanager_leadercount ([\\d.][^\\n]+)");
-        ArrayList<Double> values = MetricsUtils.collectSpecificMetric(brokerOnlineCount, kafkaMetricsData);
-        assertThat("Broker count doesn't match expected value", values.size(), is(3));
+        assertDoesNotThrow(() -> monitoringClient.validateQueryAndWait("kafka_server_replicamanager_leadercount", "3"));
     }
 
     @Test
@@ -163,20 +169,20 @@ public class MetricsST extends AbstractST {
         KafkaClientsResource.deployKafkaClients(false, KAFKA_CLIENTS_NAME).done();
 
         final String defaultKafkaClientsPodName =
-            ResourceManager.kubeClient().listPodsByPrefixInName(KAFKA_CLIENTS_NAME).get(0).getMetadata().getName();
+                ResourceManager.kubeClient().listPodsByPrefixInName(KAFKA_CLIENTS_NAME).get(0).getMetadata().getName();
 
         InternalKafkaClient internalKafkaClient = new InternalKafkaClient.Builder()
-            .withUsingPodName(defaultKafkaClientsPodName)
-            .withTopicName(TOPIC_NAME)
-            .withNamespaceName(NAMESPACE)
-            .withClusterName(CLUSTER_NAME)
-            .withMessageCount(5000)
-            .build();
+                .withUsingPodName(defaultKafkaClientsPodName)
+                .withTopicName(TOPIC_NAME)
+                .withNamespaceName(NAMESPACE)
+                .withClusterName(CLUSTER_NAME)
+                .withMessageCount(5000)
+                .build();
 
         internalKafkaClient.setPodName(defaultKafkaClientsPodName);
         internalKafkaClient.checkProducedAndConsumedMessages(
-            internalKafkaClient.sendMessagesPlain(),
-            internalKafkaClient.receiveMessagesPlain()
+                internalKafkaClient.sendMessagesPlain(),
+                internalKafkaClient.receiveMessagesPlain()
         );
 
         kafkaExporterMetricsData = MetricsUtils.collectKafkaExporterPodsMetrics(CLUSTER_NAME);
@@ -395,16 +401,36 @@ public class MetricsST extends AbstractST {
         ResourceManager.setClassResources();
         installClusterOperator(NAMESPACE);
 
-        KafkaResource.kafkaWithMetricsAndCruiseControlWithMetrics(CLUSTER_NAME, 3, 3)
-            .editOrNewSpec()
-                .editEntityOperator()
-                    .editUserOperator()
-                        .withReconciliationIntervalSeconds(30)
-                    .endUserOperator()
-                .endEntityOperator()
-            .endSpec()
-            .done();
+        cmdKubeClient().apply(FileUtils.downloadYamlAndReplaceNamespace("https://raw.githubusercontent.com/coreos/prometheus-operator/master/bundle.yaml", NAMESPACE));
 
+        SecretUtils.createSecretFromFile("../examples/metrics/prometheus-additional-properties/prometheus-additional.yaml", "prometheus-additional.yaml", "additional-scrape-configs", NAMESPACE);
+        SecretUtils.createSecretFromFile("../examples/metrics/prometheus-alertmanager-config/alert-manager-config.yaml", "alertmanager.yaml", "alertmanager-alertmanager", NAMESPACE);
+
+        SecretUtils.waitForSecretReady("additional-scrape-configs");
+        SecretUtils.waitForSecretReady("alertmanager-alertmanager");
+
+        DeploymentUtils.waitForDeploymentAndPodsReady("prometheus-operator", 1);
+
+        cmdKubeClient().apply(FileUtils.updateNamespaceOfYamlFile("../examples/metrics/prometheus-install/strimzi-pod-monitor.yaml", NAMESPACE));
+        cmdKubeClient().apply(FileUtils.updateNamespaceOfYamlFile("../examples/metrics/prometheus-install/prometheus-rules.yaml", NAMESPACE));
+        cmdKubeClient().apply(FileUtils.updateNamespaceOfYamlFile("../examples/metrics/prometheus-install/alert-manager.yaml", NAMESPACE));
+        cmdKubeClient().apply(FileUtils.updateNamespaceOfYamlFile("../examples/metrics/prometheus-install/prometheus.yaml", NAMESPACE));
+
+        PodUtils.waitForPod(ALERTMANAGER_POD);
+        PodUtils.waitForPod(PROMETHEUS_POD);
+
+        cmdKubeClient().execInCurrentNamespace("expose", "service", "prometheus-operated", "--name", "prometheus-api");
+        String host = cmdKubeClient().execInCurrentNamespace("get", "route", "prometheus-api", "-o=jsonpath='{.status.ingress[0].host}'").out().trim().replace("'", "");
+
+        KafkaResource.kafkaWithMetricsAndCruiseControlWithMetrics(CLUSTER_NAME, 3, 3)
+                .editOrNewSpec()
+                .editEntityOperator()
+                .editUserOperator()
+                .withReconciliationIntervalSeconds(30)
+                .endUserOperator()
+                .endEntityOperator()
+                .endSpec()
+                .done();
         KafkaResource.kafkaWithMetrics(SECOND_CLUSTER, 1, 1).done();
         KafkaClientsResource.deployKafkaClients(false, KAFKA_CLIENTS_NAME).done();
         KafkaConnectResource.kafkaConnectWithMetrics(CLUSTER_NAME, 1).done();
@@ -417,14 +443,10 @@ public class MetricsST extends AbstractST {
         KafkaUserResource.tlsUser(CLUSTER_NAME, KafkaUserUtils.generateRandomNameOfKafkaUser()).done();
 
         // Wait for Metrics refresh/values change
-        Thread.sleep(60_000);
-        kafkaMetricsData = MetricsUtils.collectKafkaPodsMetrics(CLUSTER_NAME);
-        zookeeperMetricsData = MetricsUtils.collectZookeeperPodsMetrics(CLUSTER_NAME);
-        kafkaConnectMetricsData = MetricsUtils.collectKafkaConnectPodsMetrics(CLUSTER_NAME);
-        kafkaExporterMetricsData = MetricsUtils.collectKafkaExporterPodsMetrics(CLUSTER_NAME);
-        kafkaBridgeMetricsData = MetricsUtils.collectKafkaBridgePodMetrics(BRIDGE_CLUSTER);
+        monitoringClient = new MonitoringClient(host, 80);
+        monitoringClient.waitUntilPrometheusReady();
     }
-    
+
     private List<String> getExpectedTopics() {
         ArrayList<String> list = new ArrayList<>();
         list.add("mirrormaker2-cluster-configs");
