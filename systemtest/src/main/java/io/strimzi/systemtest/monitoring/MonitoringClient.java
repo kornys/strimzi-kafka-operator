@@ -12,6 +12,7 @@ import io.vertx.core.json.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
@@ -75,7 +76,7 @@ public class MonitoringClient {
     }
 
     public void waitUntilPrometheusReady() {
-        TestUtils.waitFor("Prometheus ready", Constants.GLOBAL_POLL_INTERVAL, Constants.GLOBAL_TIMEOUT, () -> {
+        TestUtils.waitFor("Prometheus ready", Constants.GLOBAL_POLL_INTERVAL, Duration.ofMinutes(10).toMillis(), () -> {
             try {
                 JsonObject rule = getRule("strimzi_reconciliations_successful_total");
                 if (rule != null) {
