@@ -1,0 +1,75 @@
+test:
+  ./test.sh
+duration: 2h
+environment:
+  DOCKER_ORG: "strimzi"
+  DOCKER_TAG: "test"
+  TEST_LOG_DIR: "systemtest/target/logs"
+  TESTS: ""
+  EXCLUDED_TEST_GROUPS: "loadbalancer,arm64unsupported"
+
+/smoke:
+  summary: Run smoke strimzi test suite
+  component: [smoke]
+  duration: 20m
+  tier: 1
+  environment+:
+    TEST_PROFILE: all
+    TEST_GROUPS: smoke
+    CLUSTER_OPERATOR_INSTALLTYPE: bundle
+
+/upgrade:
+  summary: Run upgrade strimzi test suite
+  component: [strimzi, kafka, upgrade]
+  duration: 5h
+  tier: 2
+  environment+:
+    TEST_PROFILE: all
+    TEST_GROUPS: upgrade
+    CLUSTER_OPERATOR_INSTALLTYPE: bundle
+
+/regression-operators:
+  summary: Run regression strimzi test suite
+  component: [strimzi, kafka, regression, operators]
+  duration: 10h
+  tier: 2
+  environment+:
+    TEST_PROFILE: regression
+    TEST_GROUPS: regression
+    CLUSTER_OPERATOR_INSTALLTYPE: bundle
+    TESTS: "!kafka/**/*ST,!connect/**/*ST,!bridge/**/*ST,!mirrormaker/**/*ST,!metrics/**/*ST,!cruisecontrol/**/*ST,!rollingupdate/**/*ST,!tracing/**/*ST"
+
+/regression-components:
+  summary: Run regression strimzi test suite
+  component: [strimzi, kafka, regression, components]
+  duration: 8h
+  tier: 2
+  environment+:
+    TEST_PROFILE: regression
+    TEST_GROUPS: regression
+    CLUSTER_OPERATOR_INSTALLTYPE: bundle
+    TESTS: "kafka/**/*ST,connect/**/*ST,bridge/**/*ST,mirrormaker/**/*ST,metrics/**/*ST,cruisecontrol/**/*ST,rollingupdate/**/*ST,tracing/**/*ST"
+
+/kraft-operators:
+  summary: Run regression kraft strimzi test suite
+  component: [strimzi, kafka, kraft, operators]
+  duration: 8h
+  tier: 2
+  environment+:
+    TEST_PROFILE: regression
+    TEST_GROUPS: regression
+    STRIMZI_FEATURE_GATES: "+UseKRaft,+StableConnectIdentities"
+    CLUSTER_OPERATOR_INSTALLTYPE: bundle
+    TESTS: "!kafka/**/*ST,!connect/**/*ST,!bridge/**/*ST,!mirrormaker/**/*ST,!metrics/**/*ST,!cruisecontrol/**/*ST,!rollingupdate/**/*ST,!tracing/**/*ST"
+
+/kraft-components:
+  summary: Run regression kraft strimzi test suite
+  component: [strimzi, kafka, kraft, components]
+  duration: 8h
+  tier: 2
+  environment+:
+    TEST_PROFILE: regression
+    TEST_GROUPS: regression
+    STRIMZI_FEATURE_GATES: "+UseKRaft,+StableConnectIdentities"
+    CLUSTER_OPERATOR_INSTALLTYPE: bundle
+    TESTS: "kafka/**/*ST,connect/**/*ST,bridge/**/*ST,mirrormaker/**/*ST,metrics/**/*ST,cruisecontrol/**/*ST,rollingupdate/**/*ST,tracing/**/*ST"
