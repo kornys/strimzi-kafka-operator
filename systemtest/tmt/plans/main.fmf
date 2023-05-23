@@ -9,6 +9,7 @@ discover:
 
 # Required HW
 provision:
+  image: Fedora-38%
   hardware:
     memory: ">= 16 GiB"
     cpu:
