@@ -3,9 +3,5 @@ jobs:
     trigger: pull_request
     identifier: "acceptance"
     targets:
-      - strimzi
+      - fedora-38
     skip_build: true
-
-notifications:
-  pull_request:
-    successful_build: true
