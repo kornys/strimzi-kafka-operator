@@ -27,7 +27,7 @@ prepare:
       - zip
       - coreutils
 
-  - name: add docker-ce repo
+  - name: install docker-ce
     how: shell
     script: |
       sudo dnf install dnf-plugins-core -y
