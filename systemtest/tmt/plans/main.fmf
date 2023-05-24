@@ -97,8 +97,7 @@ prepare:
       eval $(minikube docker-env)
       ARCH=$(uname -m)
       if [[ ${ARCH} == "aarch64" ]]; then
-        export DOCKER_ARCHITECTURE="arm64"
-        export DOCKER_BUILDX=buildx
+        export DOCKER_BUILD_ARGS="--platform linux/arm64 --build-arg TARGETPLATFORM=linux/arm64"
       fi
       export MVN_ARGS="-B -DskipTests -Dmaven.javadoc.skip=true --no-transfer-progress"
       export DOCKER_REGISTRY="localhost:5000"
@@ -109,8 +108,6 @@ prepare:
       make docker_build
       make docker_tag
       make docker_push
-      make docker_amend_manifest
-      make docker_push_manifest
 
 # Discover tmt defined tests in tests/ folder
 execute:
