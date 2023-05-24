@@ -10,7 +10,8 @@ jobs:
     skip_build: true
     tf_extra_params:
       test:
-        name: acceptance
+        tmt:
+          name: acceptance
       environments:
         arch: x86_64
       settings:
@@ -27,7 +28,8 @@ jobs:
     skip_build: true
     tf_extra_params:
       test:
-        name: acceptance
+        tmt:
+          name: acceptance
       environments:
         arch: aarch64
       settings:
@@ -44,7 +46,8 @@ jobs:
     skip_build: true
     tf_extra_params:
       test:
-        name: regression
+        tmt:
+          name: regression
       environments:
         arch: x86_64
       settings:
@@ -61,7 +64,8 @@ jobs:
     skip_build: true
     tf_extra_params:
       test:
-        name: regression
+        tmt:
+          name: regression
       environments:
         arch: aarch64
       settings:
