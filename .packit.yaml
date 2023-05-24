@@ -2,7 +2,7 @@ jobs:
   - job: tests
     trigger: pull_request
     # Suffix for job name
-    identifier: "acceptance-x86_64"
+    identifier: "acceptance"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
       - fedora-38-x86_64
@@ -19,7 +19,7 @@ jobs:
   - job: tests
     trigger: pull_request
     # Suffix for job name
-    identifier: "acceptance-arm64"
+    identifier: "acceptance"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
       - fedora-38-aarch64
@@ -36,7 +36,7 @@ jobs:
   - job: tests
     trigger: pull_request
     # Suffix for job name
-    identifier: "regression-x86_64"
+    identifier: "regression"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
       - fedora-38-x86_64
@@ -53,7 +53,7 @@ jobs:
   - job: tests
     trigger: pull_request
     # Suffix for job name
-    identifier: "regression-arm64"
+    identifier: "regression"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
       - fedora-38-aarch64
