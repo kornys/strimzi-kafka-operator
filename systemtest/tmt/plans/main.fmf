@@ -109,7 +109,7 @@ prepare:
       make docker_tag
       make docker_push
       
-      if [[ -z ${DOCKER_ARCHITECTURE} ]]; then
+      if [[ -n "${DOCKER_ARCHITECTURE}" ]]; then
         # Deal with different manifests
         make docker_delete_manifest
         make docker_amend_manifest
