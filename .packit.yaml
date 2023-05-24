@@ -13,10 +13,11 @@ jobs:
         tmt:
           name: acceptance
       environments:
-        arch: x86_64
+        - arch: x86_64
       settings:
         pipeline:
           timeout: 8h
+
   - job: tests
     trigger: pull_request
     # Suffix for job name
@@ -31,10 +32,11 @@ jobs:
         tmt:
           name: acceptance
       environments:
-        arch: aarch64
+        - arch: aarch64
       settings:
         pipeline:
           timeout: 8h
+
   - job: tests
     trigger: pull_request
     # Suffix for job name
@@ -49,10 +51,11 @@ jobs:
         tmt:
           name: regression
       environments:
-        arch: x86_64
+        - arch: x86_64
       settings:
         pipeline:
           timeout: 8h
+
   - job: tests
     trigger: pull_request
     # Suffix for job name
@@ -67,7 +70,7 @@ jobs:
         tmt:
           name: regression
       environments:
-        arch: aarch64
+        - arch: aarch64
       settings:
         pipeline:
           timeout: 8h
