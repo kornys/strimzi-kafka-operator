@@ -5,6 +5,7 @@ environment:
   DOCKER_ORG: "strimzi"
   DOCKER_TAG: "test"
   TEST_LOG_DIR: "systemtest/target/logs"
+  TESTS: ""
 
 /smoke:
   summary: Run smoke strimzi test suite
@@ -14,17 +15,15 @@ environment:
     TEST_PROFILE: all
     TEST_GROUPS: smoke
     CLUSTER_OPERATOR_INSTALLTYPE: bundle
-    TESTS: "''"
 
 /upgrade:
   summary: Run upgrade strimzi test suite
   component: [strimzi, kafka, upgrade]
   tier: 2
   environment+:
-    TEST_PROFILE: upgrade
+    TEST_PROFILE: all
     TEST_GROUPS: upgrade
     CLUSTER_OPERATOR_INSTALLTYPE: bundle
-    TESTS: "''"
 
 /regression-operators:
   summary: Run regression strimzi test suite
@@ -34,7 +33,7 @@ environment:
     TEST_PROFILE: regression
     TEST_GROUPS: regression
     CLUSTER_OPERATOR_INSTALLTYPE: bundle
-    TESTS: "'!kafka/**/*ST,!connect/**/*ST,!bridge/**/*ST,!mirrormaker/**/*ST,!metrics/**/*ST,!cruisecontrol/**/*ST,!rollingupdate/**/*ST,!tracing/**/*ST'"
+    TESTS: "!kafka/**/*ST,!connect/**/*ST,!bridge/**/*ST,!mirrormaker/**/*ST,!metrics/**/*ST,!cruisecontrol/**/*ST,!rollingupdate/**/*ST,!tracing/**/*ST"
 
 /regression-components:
   summary: Run regression strimzi test suite
@@ -44,7 +43,7 @@ environment:
     TEST_PROFILE: regression
     TEST_GROUPS: regression
     CLUSTER_OPERATOR_INSTALLTYPE: bundle
-    TESTS: "'kafka/**/*ST,connect/**/*ST,bridge/**/*ST,mirrormaker/**/*ST,metrics/**/*ST,cruisecontrol/**/*ST,rollingupdate/**/*ST,tracing/**/*ST'"
+    TESTS: "kafka/**/*ST,connect/**/*ST,bridge/**/*ST,mirrormaker/**/*ST,metrics/**/*ST,cruisecontrol/**/*ST,rollingupdate/**/*ST,tracing/**/*ST"
 
 /kraft-operators:
   summary: Run regression kraft strimzi test suite
@@ -55,7 +54,7 @@ environment:
     TEST_GROUPS: regression
     STRIMZI_FEATURE_GATES: "+UseKRaft,+StableConnectIdentities"
     CLUSTER_OPERATOR_INSTALLTYPE: bundle
-    TESTS: "'!kafka/**/*ST,!connect/**/*ST,!bridge/**/*ST,!mirrormaker/**/*ST,!metrics/**/*ST,!cruisecontrol/**/*ST,!rollingupdate/**/*ST,!tracing/**/*ST'"
+    TESTS: "!kafka/**/*ST,!connect/**/*ST,!bridge/**/*ST,!mirrormaker/**/*ST,!metrics/**/*ST,!cruisecontrol/**/*ST,!rollingupdate/**/*ST,!tracing/**/*ST"
 
 /kraft-components:
   summary: Run regression kraft strimzi test suite
@@ -66,4 +65,4 @@ environment:
     TEST_GROUPS: regression
     STRIMZI_FEATURE_GATES: "+UseKRaft,+StableConnectIdentities"
     CLUSTER_OPERATOR_INSTALLTYPE: bundle
-    TESTS: "'kafka/**/*ST,connect/**/*ST,bridge/**/*ST,mirrormaker/**/*ST,metrics/**/*ST,cruisecontrol/**/*ST,rollingupdate/**/*ST,tracing/**/*ST'"
+    TESTS: "kafka/**/*ST,connect/**/*ST,bridge/**/*ST,mirrormaker/**/*ST,metrics/**/*ST,cruisecontrol/**/*ST,rollingupdate/**/*ST,tracing/**/*ST"
