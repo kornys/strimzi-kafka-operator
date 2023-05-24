@@ -113,25 +113,35 @@ finish:
   script: ./systemtest/tmt/scripts/copy-logs.sh
 #######################################################################
 
+/smoke:
+  summary: Run smoke strimzi test suite
+  discover+:
+    test:
+      - smoke
+
 /regression-operators:
   summary: Run regression strimzi test suite
   discover+:
-    filter: "tier:2"
+    test:
+      - regression-operators
 
 /regression-components:
   summary: Run regression strimzi test suite
   discover+:
-    filter: "tier:3"
+    test:
+      - regression-components
 
 /kraft-operators:
   summary: Run regression kraft strimzi test suite
   discover+:
-    filter: "tier:4"
+    test:
+      - kraft-operators
 
 /kraft-components:
   summary: Run regression kraft strimzi test suite
   discover+:
-    filter: "tier:5"
+    test:
+      - kraft-components
 
 /upgrade:
   summary: Run upgrade strimzi test suite
@@ -141,4 +151,5 @@ finish:
       cpu:
         processors: ">= 4"
   discover+:
-    filter: "tier:1"
+    test:
+      - upgrade

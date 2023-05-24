@@ -6,10 +6,20 @@ environment:
   DOCKER_TAG: "test"
   TEST_LOG_DIR: "systemtest/target/logs"
 
+/smoke:
+  summary: Run smoke strimzi test suite
+  component: [smoke]
+  tier: 1
+  environment+:
+    TEST_PROFILE: all
+    TEST_GROUPS: smoke
+    CLUSTER_OPERATOR_INSTALLTYPE: bundle
+    TESTS: "'*'"
+
 /upgrade:
   summary: Run upgrade strimzi test suite
   component: [strimzi, kafka, upgrade]
-  tier: 1
+  tier: 2
   environment+:
     TEST_PROFILE: upgrade
     TEST_GROUPS: upgrade
@@ -29,7 +39,7 @@ environment:
 /regression-components:
   summary: Run regression strimzi test suite
   component: [strimzi, kafka, regression, components]
-  tier: 3
+  tier: 2
   environment+:
     TEST_PROFILE: regression
     TEST_GROUPS: regression
@@ -39,7 +49,7 @@ environment:
 /kraft-operators:
   summary: Run regression kraft strimzi test suite
   component: [strimzi, kafka, kraft, operators]
-  tier: 4
+  tier: 2
   environment+:
     TEST_PROFILE: regression
     TEST_GROUPS: regression
@@ -50,7 +60,7 @@ environment:
 /kraft-components:
   summary: Run regression kraft strimzi test suite
   component: [strimzi, kafka, kraft, components]
-  tier: 5
+  tier: 2
   environment+:
     TEST_PROFILE: regression
     TEST_GROUPS: regression
