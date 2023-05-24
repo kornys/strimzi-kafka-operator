@@ -5,15 +5,13 @@ jobs:
     identifier: "acceptance-x86_64"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
-      - fedora-38
+      - fedora-38-x86_64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
     tf_extra_params:
       test:
         tmt:
           name: acceptance
-      environments:
-        - arch: x86_64
       settings:
         pipeline:
           timeout: 8h
@@ -24,15 +22,13 @@ jobs:
     identifier: "acceptance-arm64"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
-      - fedora-38
+      - fedora-38-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
     tf_extra_params:
       test:
         tmt:
           name: acceptance
-      environments:
-        - arch: aarch64
       settings:
         pipeline:
           timeout: 8h
@@ -43,15 +39,13 @@ jobs:
     identifier: "regression-x86_64"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
-      - fedora-38
+      - fedora-38-x86_64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
     tf_extra_params:
       test:
         tmt:
           name: regression
-      environments:
-        - arch: x86_64
       settings:
         pipeline:
           timeout: 8h
@@ -62,15 +56,13 @@ jobs:
     identifier: "regression-arm64"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
-      - fedora-38
+      - fedora-38-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
     tf_extra_params:
       test:
         tmt:
           name: regression
-      environments:
-        - arch: aarch64
       settings:
         pipeline:
           timeout: 8h
