@@ -104,16 +104,13 @@ prepare:
       export DOCKER_REGISTRY="localhost:5000"
       export DOCKER_ORG="strimzi"
       export DOCKER_TAG="test"
+      
       make java_install
       make docker_build
       make docker_tag
       make docker_push
-      
-      if [[ -n "${DOCKER_ARCHITECTURE}" ]]; then
-        # Deal with different manifests
-        make docker_amend_manifest
-        make docker_push_manifest
-      fi
+      make docker_amend_manifest
+      make docker_push_manifest
 
 # Discover tmt defined tests in tests/ folder
 execute:
