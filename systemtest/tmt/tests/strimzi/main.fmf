@@ -14,7 +14,7 @@ environment:
     TEST_PROFILE: all
     TEST_GROUPS: smoke
     CLUSTER_OPERATOR_INSTALLTYPE: bundle
-    TESTS: "'*'"
+    TESTS: "''"
 
 /upgrade:
   summary: Run upgrade strimzi test suite
