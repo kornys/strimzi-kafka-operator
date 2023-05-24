@@ -9,7 +9,6 @@ discover:
 
 # Required HW
 provision:
-  arch: x86_64,aarch64
   hardware:
     memory: ">= 16 GiB"
     cpu:
