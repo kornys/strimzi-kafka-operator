@@ -14,5 +14,5 @@ mvn verify -pl systemtest -P ${TEST_PROFILE} \
     -Dfailsafe.rerunFailingTestsCount=1 \
     -Djunit.jupiter.execution.parallel.enabled=true \
     -Djunit.jupiter.execution.parallel.config.fixed.parallelism=3 \
-    -Dit.test="${TEST}" \
+    -Dit.test="${TESTS}" \
     --no-transfer-progress
