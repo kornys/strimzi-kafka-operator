@@ -93,7 +93,7 @@ prepare:
   - name: Build strimzi images
     how: shell
     script: |
-      #build images
+      # build images
       eval $(minikube docker-env)
       ARCH=$(uname -m)
       if [[ ${ARCH} == "aarch64" ]]; then
@@ -108,6 +108,13 @@ prepare:
       make docker_build
       make docker_tag
       make docker_push
+      
+      if [[ -z ${DOCKER_ARCHITECTURE} ]]; then
+        # Deal with different manifests
+        make docker_delete_manifest
+        make docker_amend_manifest
+        make docker_push_manifest
+      fi
 
 # Discover tmt defined tests in tests/ folder
 execute:
