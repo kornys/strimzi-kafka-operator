@@ -24,7 +24,7 @@ environment:
     TEST_PROFILE: upgrade
     TEST_GROUPS: upgrade
     CLUSTER_OPERATOR_INSTALLTYPE: bundle
-    TESTS: "'*'"
+    TESTS: "''"
 
 /regression-operators:
   summary: Run regression strimzi test suite
