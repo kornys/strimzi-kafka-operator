@@ -111,7 +111,6 @@ prepare:
       
       if [[ -n "${DOCKER_ARCHITECTURE}" ]]; then
         # Deal with different manifests
-        make docker_delete_manifest
         make docker_amend_manifest
         make docker_push_manifest
       fi
