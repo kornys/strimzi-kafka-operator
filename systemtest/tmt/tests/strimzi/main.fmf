@@ -1,6 +1,6 @@
 test:
   ./test.sh
-duration: 120m
+duration: 2h
 environment:
   DOCKER_ORG: "strimzi"
   DOCKER_TAG: "test"
@@ -10,6 +10,7 @@ environment:
 /smoke:
   summary: Run smoke strimzi test suite
   component: [smoke]
+  duration: 20m
   tier: 1
   environment+:
     TEST_PROFILE: all
@@ -19,6 +20,7 @@ environment:
 /upgrade:
   summary: Run upgrade strimzi test suite
   component: [strimzi, kafka, upgrade]
+  duration: 5h
   tier: 2
   environment+:
     TEST_PROFILE: all
@@ -28,6 +30,7 @@ environment:
 /regression-operators:
   summary: Run regression strimzi test suite
   component: [strimzi, kafka, regression, operators]
+  duration: 10h
   tier: 2
   environment+:
     TEST_PROFILE: regression
@@ -38,6 +41,7 @@ environment:
 /regression-components:
   summary: Run regression strimzi test suite
   component: [strimzi, kafka, regression, components]
+  duration: 8h
   tier: 2
   environment+:
     TEST_PROFILE: regression
@@ -48,6 +52,7 @@ environment:
 /kraft-operators:
   summary: Run regression kraft strimzi test suite
   component: [strimzi, kafka, kraft, operators]
+  duration: 8h
   tier: 2
   environment+:
     TEST_PROFILE: regression
@@ -59,6 +64,7 @@ environment:
 /kraft-components:
   summary: Run regression kraft strimzi test suite
   component: [strimzi, kafka, kraft, components]
+  duration: 8h
   tier: 2
   environment+:
     TEST_PROFILE: regression
