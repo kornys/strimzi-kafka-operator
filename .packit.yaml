@@ -10,7 +10,7 @@ jobs:
     skip_build: true
     tf_extra_params:
       test:
-        tmt:
+        fmf:
           name: acceptance
       settings:
         pipeline:
@@ -27,7 +27,7 @@ jobs:
     skip_build: true
     tf_extra_params:
       test:
-        tmt:
+        fmf:
           name: acceptance
       settings:
         pipeline:
@@ -44,7 +44,7 @@ jobs:
     skip_build: true
     tf_extra_params:
       test:
-        tmt:
+        fmf:
           name: regression
       settings:
         pipeline:
@@ -61,7 +61,7 @@ jobs:
     skip_build: true
     tf_extra_params:
       test:
-        tmt:
+        fmf:
           name: regression
       settings:
         pipeline:
