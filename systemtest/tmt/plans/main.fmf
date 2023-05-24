@@ -113,13 +113,32 @@ finish:
   script: ./systemtest/tmt/scripts/copy-logs.sh
 #######################################################################
 
-/acceptance:
-  summary: Acceptance strimzi test suite
-  discover+:
-    filter: "tier:1"
-
-
-/regression:
-  summary: Regression strimzi test suite
+/regression-operators:
+  summary: Run regression strimzi test suite
   discover+:
     filter: "tier:2"
+
+/regression-components:
+  summary: Run regression strimzi test suite
+  discover+:
+    filter: "tier:3"
+
+/kraft-operators:
+  summary: Run regression kraft strimzi test suite
+  discover+:
+    filter: "tier:4"
+
+/kraft-components:
+  summary: Run regression kraft strimzi test suite
+  discover+:
+    filter: "tier:5"
+
+/upgrade:
+  summary: Run upgrade strimzi test suite
+  provision:
+    hardware:
+      memory: ">= 8 GiB"
+      cpu:
+        processors: ">= 4"
+  discover+:
+    filter: "tier:1"

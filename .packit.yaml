@@ -2,7 +2,7 @@ jobs:
   - job: tests
     trigger: pull_request
     # Suffix for job name
-    identifier: "acceptance"
+    identifier: "upgrade"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
       - fedora-38-x86_64
@@ -11,15 +11,15 @@ jobs:
     tf_extra_params:
       test:
         fmf:
-          name: acceptance
+          name: upgrade
       settings:
         pipeline:
-          timeout: 8h
+          timeout: 5h
 
   - job: tests
     trigger: pull_request
     # Suffix for job name
-    identifier: "acceptance"
+    identifier: "upgrade"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
       - fedora-38-aarch64
@@ -28,15 +28,16 @@ jobs:
     tf_extra_params:
       test:
         fmf:
-          name: acceptance
+          name: upgrade
       settings:
         pipeline:
-          timeout: 8h
+          timeout: 5h
+  ###############################################################################################
 
   - job: tests
     trigger: pull_request
     # Suffix for job name
-    identifier: "regression"
+    identifier: "regression-operators"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
       - fedora-38-x86_64
@@ -45,15 +46,15 @@ jobs:
     tf_extra_params:
       test:
         fmf:
-          name: regression
+          name: regression-operators
       settings:
         pipeline:
-          timeout: 8h
+          timeout: 10h
 
   - job: tests
     trigger: pull_request
     # Suffix for job name
-    identifier: "regression"
+    identifier: "regression-operators"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
       - fedora-38-aarch64
@@ -62,7 +63,112 @@ jobs:
     tf_extra_params:
       test:
         fmf:
-          name: regression
+          name: regression-operators
+      settings:
+        pipeline:
+          timeout: 10h
+  ###############################################################################################
+
+  - job: tests
+    trigger: pull_request
+    # Suffix for job name
+    identifier: "regression-components"
+    targets:
+      # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
+      - fedora-38-x86_64
+    # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
+    skip_build: true
+    tf_extra_params:
+      test:
+        fmf:
+          name: regression-components
+      settings:
+        pipeline:
+          timeout: 8h
+
+  - job: tests
+    trigger: pull_request
+    # Suffix for job name
+    identifier: "regression-components"
+    targets:
+      # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
+      - fedora-38-aarch64
+    # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
+    skip_build: true
+    tf_extra_params:
+      test:
+        fmf:
+          name: regression-components
+      settings:
+        pipeline:
+          timeout: 8h
+  ###############################################################################################
+
+  - job: tests
+    trigger: pull_request
+    # Suffix for job name
+    identifier: "kraft-operators"
+    targets:
+      # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
+      - fedora-38-x86_64
+    # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
+    skip_build: true
+    tf_extra_params:
+      test:
+        fmf:
+          name: kraft-operators
+      settings:
+        pipeline:
+          timeout: 8h
+
+  - job: tests
+    trigger: pull_request
+    # Suffix for job name
+    identifier: "kraft-operators"
+    targets:
+      # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
+      - fedora-38-aarch64
+    # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
+    skip_build: true
+    tf_extra_params:
+      test:
+        fmf:
+          name: kraft-operators
+      settings:
+        pipeline:
+          timeout: 8h
+  ###############################################################################################
+
+  - job: tests
+    trigger: pull_request
+    # Suffix for job name
+    identifier: "kraft-components"
+    targets:
+      # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
+      - fedora-38-x86_64
+    # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
+    skip_build: true
+    tf_extra_params:
+      test:
+        fmf:
+          name: kraft-components
+      settings:
+        pipeline:
+          timeout: 8h
+
+  - job: tests
+    trigger: pull_request
+    # Suffix for job name
+    identifier: "kraft-components"
+    targets:
+      # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
+      - fedora-38-aarch64
+    # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
+    skip_build: true
+    tf_extra_params:
+      test:
+        fmf:
+          name: kraft-components
       settings:
         pipeline:
           timeout: 8h
