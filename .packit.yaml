@@ -1,3 +1,6 @@
+packit_instances: ["stg"]
+upstream_project_url: https://github.com/strimzi/strimzi-kafka-operator
+issue_repository: https://github.com/strimzi/strimzi-kafka-operator
 # Definition of job tree for testing-farm
 jobs:
   - job: tests
@@ -29,6 +32,7 @@ jobs:
       - fedora-38-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
+    manual_trigger: true
     tf_extra_params:
       test:
         fmf:
@@ -48,6 +52,7 @@ jobs:
       - fedora-38-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
+    manual_trigger: true
     tf_extra_params:
       test:
         fmf:
@@ -67,6 +72,7 @@ jobs:
       - fedora-38-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
+    manual_trigger: true
     tf_extra_params:
       test:
         fmf:
@@ -86,6 +92,7 @@ jobs:
       - fedora-38-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
+    manual_trigger: true
     tf_extra_params:
       test:
         fmf:
