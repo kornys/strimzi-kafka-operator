@@ -22,11 +22,22 @@ prepare:
       - wget
       - java-17-openjdk-devel
       - xz
-      - docker
       - make
       - git
       - zip
       - coreutils
+
+  - name: Install docker-ce
+    how: shell
+    script: |
+      OS=$(cat /etc/redhat-release || true)
+      if [[ ${OS} == *"CentOS"* ]]; then
+        sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      else
+        sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+      fi
+      sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin
+      sudo systemctl enable docker --now
 
   - name: deploy yq
     how: shell
@@ -65,8 +76,6 @@ prepare:
       ARCH=$(uname -m)
       if [[ $ARCH == "x86_64" ]]; then ARCH="amd64"; fi
       if [[ $ARCH == "aarch64" ]]; then ARCH="arm64"; fi
-      sudo systemctl enable docker
-      sudo systemctl start docker
       ./.azure/scripts/setup-kubernetes.sh ${ARCH}
 
   - name: deploy helm

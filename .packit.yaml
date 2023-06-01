@@ -8,8 +8,8 @@ jobs:
     identifier: "upgrade"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
-      - fedora-38-x86_64
-      - fedora-38-aarch64
+      - centos-stream-9-x86_64
+      - centos-stream-9-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
     manual_trigger: true
@@ -28,8 +28,8 @@ jobs:
     identifier: "regression-operators"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
-      - fedora-38-x86_64
-      - fedora-38-aarch64
+      - centos-stream-9-x86_64
+      - centos-stream-9-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
     manual_trigger: true
@@ -48,8 +48,8 @@ jobs:
     identifier: "regression-components"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
-      - fedora-38-x86_64
-      - fedora-38-aarch64
+      - centos-stream-9-x86_64
+      - centos-stream-9-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
     manual_trigger: true
@@ -68,8 +68,8 @@ jobs:
     identifier: "kraft-operators"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
-      - fedora-38-x86_64
-      - fedora-38-aarch64
+      - centos-stream-9-x86_64
+      - centos-stream-9-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
     manual_trigger: true
@@ -88,8 +88,8 @@ jobs:
     identifier: "kraft-components"
     targets:
       # This target is not used at all by our tests, but it has to be one of the available - https://packit.dev/docs/configuration/#aliases
-      - fedora-38-x86_64
-      - fedora-38-aarch64
+      - centos-stream-9-x86_64
+      - centos-stream-9-aarch64
     # We don't need to build any packages for Fedora/RHEL/CentOS, it is not related to Strimzi tests
     skip_build: true
     manual_trigger: true
