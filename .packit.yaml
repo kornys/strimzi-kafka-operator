@@ -17,9 +17,6 @@ jobs:
       test:
         fmf:
           name: upgrade
-      settings:
-        pipeline:
-          timeout: 5h
   ###############################################################################################
 
   - job: tests
@@ -37,9 +34,6 @@ jobs:
       test:
         fmf:
           name: regression-operators
-      settings:
-        pipeline:
-          timeout: 10h
   ###############################################################################################
 
   - job: tests
@@ -57,9 +51,6 @@ jobs:
       test:
         fmf:
           name: regression-components
-      settings:
-        pipeline:
-          timeout: 8h
   ###############################################################################################
 
   - job: tests
@@ -77,9 +68,6 @@ jobs:
       test:
         fmf:
           name: kraft-operators
-      settings:
-        pipeline:
-          timeout: 8h
   ###############################################################################################
 
   - job: tests
@@ -97,6 +85,3 @@ jobs:
       test:
         fmf:
           name: kraft-components
-      settings:
-        pipeline:
-          timeout: 8h
