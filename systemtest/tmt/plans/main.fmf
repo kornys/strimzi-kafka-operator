@@ -10,7 +10,7 @@ discover:
 # Required HW
 provision:
   hardware:
-    memory: ">= 16 GiB"
+    memory: ">= 24 GiB"
     cpu:
       processors: ">= 4"
 
@@ -76,6 +76,7 @@ prepare:
       ARCH=$(uname -m)
       if [[ $ARCH == "x86_64" ]]; then ARCH="amd64"; fi
       if [[ $ARCH == "aarch64" ]]; then ARCH="arm64"; fi
+      export MINIKUBE_MEMORY=$(($(free -m | grep "Mem" | awk '{print $2}') - 2048))
       ./.azure/scripts/setup-kubernetes.sh ${ARCH}
 
   - name: deploy helm
