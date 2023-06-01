@@ -12,7 +12,7 @@ provision:
   hardware:
     memory: ">= 24 GiB"
     cpu:
-      processors: ">= 4"
+      processors: ">= 8"
 
 # Install required packages and scripts for running strimzi suite
 prepare:
