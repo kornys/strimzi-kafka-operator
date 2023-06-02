@@ -6,7 +6,11 @@ environment:
   DOCKER_TAG: "test"
   TEST_LOG_DIR: "systemtest/target/logs"
   TESTS: ""
-  EXCLUDED_TEST_GROUPS: "loadbalancer,arm64unsupported"
+  EXCLUDED_TEST_GROUPS: "loadbalancer"
+adjust:
+  - environment+:
+      EXCLUDED_TEST_GROUPS: "loadbalancer,arm64unsupported"
+    when: arch == aarch64, arm64
 
 /smoke:
   summary: Run smoke strimzi test suite
